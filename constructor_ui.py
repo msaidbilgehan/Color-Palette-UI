@@ -12,8 +12,8 @@ import numpy as np
 import libs
 
 from stdo import stdo
-from qt_tools import qtimer_Create_And_Run
-from tools import load_from_json, save_to_json, path_control
+from qt_tools import qtimer_Create_And_Run, list_Widget_Item
+from tools import load_from_json, save_to_json, list_files
 from image_manipulation import color_Range_Mask_2, erosion, dilation
 
 from structure_ui import init_and_run_UI, Graphics_View  # , Structure_UI, init_UI
@@ -66,12 +66,22 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             trigger_quit=self.is_Quit_App, 
             trigger_pause=self.checkBox_Process_Active.isChecked
         )
-        
-        # self.pushButton_Connect_to_Camera.setStyleSheet("QPushButton::hover"
-        #                                                 "{"
-        #                                                 "background-color : lightgreen;"
-        #                                                 "}")
 
+        self.loaded_color_palette = {
+            "Lower_Red": self.spinBox_Color_Palette_Lower_Red.value(),
+            "Upper_Red": self.spinBox_Color_Palette_Upper_Red.value(),
+            "Lower_Green": self.spinBox_Color_Palette_Lower_Green.value(),
+            "Upper_Green": self.spinBox_Color_Palette_Upper_Green.value(),
+            "Lower_Blue": self.spinBox_Color_Palette_Lower_Blue.value(),
+            "Upper_Blue": self.spinBox_Color_Palette_Upper_Blue.value(),
+            "is_HSV": self.checkBox_is_HSV.isChecked(),
+            "Color_Mask_Kernel": self.checkBox_Color_Mask_Kernel.isChecked(),
+            "Color_Mask_Kernel_Min": self.spinBox_Color_Mask_Kernel_Min.value(),
+            "Color_Mask_Kernel_Max": self.spinBox_Color_Mask_Kernel_Max.value()
+        }
+        self.color_palette_file_paths = list()
+        self.load_Color_Palettes("./")
+        
     ### ### ## ### ###
     ### OVERWRITES ###
     ### ### ## ### ###
@@ -146,11 +156,14 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         self.pushButton_Load_Video.clicked.connect(
             self.load_Video
         )
-        self.pushButton_Save_Palette.clicked.connect(
+        self.pushButton_save_palette.clicked.connect(
             self.save_Palette
         )
-        self.pushButton_Load_Palette.clicked.connect(
+        self.pushButton_load_palette.clicked.connect(
             self.load_Palette
+        )
+        self.pushButton_refresh_palettes.clicked.connect(
+            lambda: self.load_Color_Palettes("./")
         )
         
     def load_Video(self):
@@ -233,7 +246,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
     def save_Palette(self):
         path = self.lineEdit_color_palette_name.text() if \
             self.lineEdit_color_palette_name.text() else "default_color_palette.json"
-        data = {
+        self.loaded_color_palette = {
             "Lower_Red": self.spinBox_Color_Palette_Lower_Red.value(),
             "Upper_Red": self.spinBox_Color_Palette_Upper_Red.value(),
             "Lower_Green": self.spinBox_Color_Palette_Lower_Green.value(),
@@ -247,60 +260,82 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         }
         save_to_json(
             path,
-            data
+            self.loaded_color_palette
         )
+        self.load_Color_Palettes("./")
         
     def load_Palette(self):
-        path = self.lineEdit_color_palette_name.text() if \
-            self.lineEdit_color_palette_name.text() else "default_color_palette.json"
+        # path = self.lineEdit_color_palette_name.text() if \
+        #     self.lineEdit_color_palette_name.text() else "default_color_palette.json"
         
-        self.loaded_color_palette = load_from_json(
-            path
-        )
-
-        if self.loaded_color_palette is not None:
-            # Red
-            self.spinBox_Color_Palette_Lower_Red.setValue(
-                self.loaded_color_palette["Lower_Red"]
-            )
-            self.spinBox_Color_Palette_Upper_Red.setValue(
-                self.loaded_color_palette["Upper_Red"]
+        if self.listWidget_color_palettes.currentRow() > -1:
+            self.loaded_color_palette = load_from_json(
+                self.color_palette_file_paths[
+                    self.listWidget_color_palettes.currentRow()
+                ]
             )
 
-            # Green
-            self.spinBox_Color_Palette_Lower_Green.setValue(
-                self.loaded_color_palette["Lower_Green"]
-            )
-            self.spinBox_Color_Palette_Upper_Green.setValue(
-                self.loaded_color_palette["Upper_Green"]
-            )
-            
-            # Blue
-            self.spinBox_Color_Palette_Lower_Blue.setValue(
-                self.loaded_color_palette["Lower_Blue"]
-            )
-            self.spinBox_Color_Palette_Upper_Blue.setValue(
-                self.loaded_color_palette["Upper_Blue"]
-            )
-            
-            # HSV
-            self.checkBox_is_HSV.setChecked(
-                self.loaded_color_palette["is_HSV"]
-            )
-            
-            # Kernel
-            self.checkBox_Color_Mask_Kernel.setChecked(
-                self.loaded_color_palette["Color_Mask_Kernel"]
-            )
-            self.spinBox_Color_Mask_Kernel_Min.setValue(
-                self.loaded_color_palette["Color_Mask_Kernel_Min"]
-            )
-            self.spinBox_Color_Mask_Kernel_Max.setValue(
-                self.loaded_color_palette["Color_Mask_Kernel_Max"]
-            )
-        # else:
-        #     self.
+            if self.loaded_color_palette is not None:
+                self.lineEdit_color_palette_name.setText(
+                    self.color_palette_file_paths[
+                        self.listWidget_color_palettes.currentRow()
+                    ].split("/")[-1]
+                )
+                # Red
+                self.spinBox_Color_Palette_Lower_Red.setValue(
+                    self.loaded_color_palette["Lower_Red"]
+                )
+                self.spinBox_Color_Palette_Upper_Red.setValue(
+                    self.loaded_color_palette["Upper_Red"]
+                )
+
+                # Green
+                self.spinBox_Color_Palette_Lower_Green.setValue(
+                    self.loaded_color_palette["Lower_Green"]
+                )
+                self.spinBox_Color_Palette_Upper_Green.setValue(
+                    self.loaded_color_palette["Upper_Green"]
+                )
+                
+                # Blue
+                self.spinBox_Color_Palette_Lower_Blue.setValue(
+                    self.loaded_color_palette["Lower_Blue"]
+                )
+                self.spinBox_Color_Palette_Upper_Blue.setValue(
+                    self.loaded_color_palette["Upper_Blue"]
+                )
+                
+                # HSV
+                self.checkBox_is_HSV.setChecked(
+                    self.loaded_color_palette["is_HSV"]
+                )
+                
+                # Kernel
+                self.checkBox_Color_Mask_Kernel.setChecked(
+                    self.loaded_color_palette["Color_Mask_Kernel"]
+                )
+                self.spinBox_Color_Mask_Kernel_Min.setValue(
+                    self.loaded_color_palette["Color_Mask_Kernel_Min"]
+                )
+                self.spinBox_Color_Mask_Kernel_Max.setValue(
+                    self.loaded_color_palette["Color_Mask_Kernel_Max"]
+                )
     
+    def load_Color_Palettes(self, path):
+        self.color_palette_file_paths = list_files(
+            path=path,
+            extensions=[".json"],
+            recursive=False
+        )
+        self.listWidget_color_palettes.clear()
+        for color_palette_path in self.color_palette_file_paths:
+            self.qt_Priority()
+            self.listWidget_color_palettes.addItem(
+                list_Widget_Item(
+                    title=color_palette_path.split("/")[-1]
+                )
+            )
+
     ### ### ## ### ###
     ### ### ## ### ###
     ### ### ## ### ###
@@ -348,14 +383,14 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                 is_color_Range_Mask, max_matched_frame_coords, mask = color_Range_Mask_2(
                     img=image,
                     color_palette_lower=(
-                        self.spinBox_Color_Palette_Lower_Red.value(),
+                        self.spinBox_Color_Palette_Lower_Blue.value(),
                         self.spinBox_Color_Palette_Lower_Green.value(),
-                        self.spinBox_Color_Palette_Lower_Blue.value()
+                        self.spinBox_Color_Palette_Lower_Red.value()
                     ),
                     color_palette_upper=(
-                        self.spinBox_Color_Palette_Upper_Red.value(),
+                        self.spinBox_Color_Palette_Upper_Blue.value(),
                         self.spinBox_Color_Palette_Upper_Green.value(),
-                        self.spinBox_Color_Palette_Upper_Blue.value()
+                        self.spinBox_Color_Palette_Upper_Red.value()
                     ),
                     is_HSV=self.checkBox_is_HSV.isChecked(),
                 )
