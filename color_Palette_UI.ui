@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Muhammed Said BİLGEHAN</author>
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1233</width>
+    <height>823</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_6">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox_Process">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Process</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0" rowspan="6">
+        <widget class="QGroupBox" name="groupBox_Main_Flow">
+         <property name="maximumSize">
+          <size>
+           <width>500</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Main Flow</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_10">
+          <item row="0" column="0">
+           <widget class="Graphics_View" name="graphicsView_Camera">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_Camera_Settings">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string>Camera Settings</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButton_Remove_the_Camera">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Remove the Camera</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="2">
+              <widget class="QPushButton" name="pushButton_Load_Image">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Load Image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="pushButton_Connect_to_Camera">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton::hover {background-color : lightgreen}
+QPushButton::click {background-color : green}</string>
+               </property>
+               <property name="text">
+                <string>Connect to Camera</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2" rowspan="2" colspan="3">
+              <widget class="QGroupBox" name="groupBox_Exposure_Time">
+               <property name="title">
+                <string>Exposure Time</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="3" column="0">
+                 <widget class="QSpinBox" name="spinBox_Exposure_Time">
+                  <property name="minimum">
+                   <number>-100000</number>
+                  </property>
+                  <property name="maximum">
+                   <number>100000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QPushButton" name="pushButton_Set_Exposure">
+                  <property name="text">
+                   <string>Set</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_Save_Image">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Save Image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" rowspan="2">
+              <widget class="QPushButton" name="pushButton_Load_Video">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Load Video</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2" colspan="2">
+              <widget class="QLabel" name="label_H_5">
+               <property name="text">
+                <string>FPS</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <widget class="QSpinBox" name="spinBox_Save_Video_FPS">
+               <property name="minimum">
+                <number>10</number>
+               </property>
+               <property name="maximum">
+                <number>1020</number>
+               </property>
+               <property name="singleStep">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>24</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" colspan="3">
+              <widget class="QPushButton" name="pushButton_Stream_Switch">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Stream Switch</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QGroupBox" name="groupBox_Camera_Process_Color_Mask">
+         <property name="title">
+          <string>Color Mask</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_13">
+          <item row="2" column="0" rowspan="3">
+           <widget class="QGroupBox" name="groupBox_Color_Palette">
+            <property name="title">
+             <string>Color Palette</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Red</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Blue</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_Color_Palette_Lower">
+               <property name="text">
+                <string>Lower</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Lower_Red">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Lower_Green">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Lower_Blue">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Green</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Upper_Green">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Upper_Red">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QSpinBox" name="spinBox_Color_Palette_Upper_Blue">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>255</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_Color_Palette_Higher">
+               <property name="text">
+                <string>Higher</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="1" rowspan="3">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="1" column="0" colspan="4">
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QSpinBox" name="spinBox_Color_Mask_Kernel_Min">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>25</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="4">
+              <widget class="QCheckBox" name="checkBox_is_HSV">
+               <property name="text">
+                <string>Is HSV Color Type (Default: False/BGR)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QSpinBox" name="spinBox_Color_Mask_Kernel_Max">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>25</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" rowspan="2" colspan="2">
+              <widget class="QCheckBox" name="checkBox_Color_Mask_Kernel">
+               <property name="text">
+                <string>Kernel</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="4">
+              <widget class="Line" name="line_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2" colspan="2">
+              <widget class="QComboBox" name="comboBox_Color_Mask_Kernel">
+               <item>
+                <property name="text">
+                 <string>Custom</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="4">
+           <widget class="Graphics_View" name="graphicsView_Camera_Process_Color_Mask">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="4">
+           <widget class="QCheckBox" name="checkBox_Process_Active">
+            <property name="text">
+             <string>Activate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2" rowspan="3">
+           <widget class="QGroupBox" name="groupBox_Color_Palette_Save_Load">
+            <property name="title">
+             <string>Save/Load</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QLineEdit" name="lineEdit_color_palette_name"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_Save_Palette">
+               <property name="text">
+                <string>Save Palette</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_Load_Palette">
+               <property name="text">
+                <string>Load Palette</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_About_Page"/>
+  </widget>
+  <action name="action_About_Page">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+   <property name="toolTip">
+    <string>About</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Graphics_View</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">constructor_ui</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>10</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>
