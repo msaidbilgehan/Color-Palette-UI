@@ -12,7 +12,7 @@ import numpy as np
 import libs
 
 from stdo import stdo
-from qt_tools import qtimer_Create_And_Run, list_Widget_Item
+from qt_tools import qtimer_Create_And_Run, list_Widget_Item, lcdNumber_Set, get_Color
 from tools import load_from_json, save_to_json, list_files
 from image_manipulation import color_Range_Mask_2, erosion, dilation
 
@@ -26,6 +26,54 @@ from structure_threading import Thread_Object
 ### ### ### CAMERA UI CONFIGURATIONS ### ### ###
 ### ### ### ### ### ## ## ## ### ### ### ### ###
 
+class Graphics_View_LCD(Graphics_View):
+    def __init__(self, *args, **kwargs):
+        super(Graphics_View_LCD, self).__init__(*args, **kwargs)
+        
+        self.is_Connected_LCDs = False
+        self.lcdNumber_XY_list = list()
+        self.lcdNumber_RGB_list = list()
+        
+        # self.red = 0
+        # self.green = 0 
+        # self.blue = 0
+    
+    def mouseMoveEvent(self, event):
+        super(Graphics_View_LCD, self).mouseMoveEvent(event)
+        # self.mouse_Events["mouseMove"] = True
+        if self.is_Connected_LCDs:
+            if self.lcdNumber_XY_list != []:
+                lcdNumber_Set(
+                    # mouseMove_position
+                    self.lcdNumber_XY_list,
+                    [
+                        self.mouse_Events["mouseMove_position_scene"].x(),
+                        self.mouse_Events["mouseMove_position_scene"].y()
+                    ]
+                )
+            if self.lcdNumber_RGB_list != []:
+                red, green, blue = self.color_Picker()
+                lcdNumber_Set(
+                    self.lcdNumber_RGB_list,
+                    [
+                        red,
+                        green,
+                        blue,
+                        int((red + green + blue) / 3)
+                        if red + green + blue != 0
+                        else 0,
+                        int(255 - (red + green + blue) / 3)
+                        if red + green + blue != 0
+                        else 0
+                    ]
+                )
+
+    def mouseDoubleClickEvent(self, event):
+        super(Graphics_View_LCD, self).mouseDoubleClickEvent(event)
+        # self.red, self.green, self.blue = self.color_Picker()
+        self.connector_mouseDoubleClickEvent(
+            self.color_Picker()
+        )
 
 class Ui_Color_Palette(Structure_Ui_Camera):
     logger_level = logging.INFO
@@ -55,6 +103,19 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         self.comboBox_Color_Mask_Kernel.addItems(
             [kernel for kernel in self.kernels.keys()]
         )
+        self.graphicsView_Camera.lcdNumber_XY_list = [
+            self.lcdNumber_Pointer_X,
+            self.lcdNumber_Pointer_Y
+        ]
+        self.graphicsView_Camera.lcdNumber_RGB_list = [
+            self.lcdNumber_Pointer_Color_Red,
+            self.lcdNumber_Pointer_Color_Green,
+            self.lcdNumber_Pointer_Color_Blue,
+            self.lcdNumber_Pointer_Color_Grayscale,
+            self.lcdNumber_Pointer_Color_Grayscale_Inverted
+        ]
+        self.graphicsView_Camera.is_Connected_LCDs = True
+        self.graphicsView_Camera.connector_mouseDoubleClickEvent = self.color_Picker_Double_Click_Action
 
         ### ### ### ### ###
         ### ### Init ### ##
@@ -100,6 +161,14 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             connector_stream=self.stream_Flow,
             delay = 0.0001
         )
+        ### Initialize Graphics View Object Variables
+        self.graphicsView_Camera_Process_Color_Mask.LCD_Number_List = [
+            self.lcdNumber_Pointer_Color_Red,
+            self.lcdNumber_Pointer_Color_Green,
+            self.lcdNumber_Pointer_Color_Blue,
+            self.lcdNumber_Pointer_Color_Grayscale,
+            self.lcdNumber_Pointer_Color_Grayscale_Inverted
+        ]
         
         self.camera_Instance.api_Set_Camera_Size(resolution=(1920, 1080))
         
@@ -164,6 +233,9 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         )
         self.pushButton_refresh_palettes.clicked.connect(
             lambda: self.load_Color_Palettes("./")
+        )
+        self.pushButton_Double_Click_Listener.clicked.connect(
+            self.action_Double_Click_Listener
         )
         
     def load_Video(self):
@@ -339,6 +411,32 @@ class Ui_Color_Palette(Structure_Ui_Camera):
     ### ### ## ### ###
     ### ### ## ### ###
     ### ### ## ### ###
+    
+    def action_Double_Click_Listener(self):
+        self.QTimer_Dict["action_Double_Click_Listener"] = qtimer_Create_And_Run(
+            self,
+            self.color_Picker_Double_Click_Listener,
+            100,
+            is_single_shot=True
+        )
+    
+    def color_Picker_Double_Click_Listener(self):
+        self.graphicsView_Camera.mouse_Events["mouseDoubleClick"] = False
+        while not self.graphicsView_Camera.mouse_Events["mouseDoubleClick"]:
+            self.qt_Priority()
+        # self.graphicsView_Camera.mouse_Events["mouseDoubleClick_position_scene"]
+        # (self.red, self.green, self.blue)
+
+        red, green, blue = self.graphicsView_Camera.color_Picker()
+        self.spinBox_Color_Palette_Double_Click_Red.setValue(red)
+        self.spinBox_Color_Palette_Double_Click_Green.setValue(green)
+        self.spinBox_Color_Palette_Double_Click_Blue.setValue(blue)
+    
+    def color_Picker_Double_Click_Action(self, params):
+        red, green, blue = params
+        self.spinBox_Color_Palette_Double_Click_Red.setValue(red)
+        self.spinBox_Color_Palette_Double_Click_Green.setValue(green)
+        self.spinBox_Color_Palette_Double_Click_Blue.setValue(blue)
     
     def stream_Flow(self):
         return self.camera_Instance.stream_Returner() \
