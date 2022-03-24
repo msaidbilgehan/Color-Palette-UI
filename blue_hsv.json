@@ -8,5 +8,6 @@
     "Upper_Blue": 205,
     "Upper_Green": 250,
     "Upper_Red": 255,
-    "is_HSV": true
+    "is_HSV": true,
+    "is_Invert": false
 }

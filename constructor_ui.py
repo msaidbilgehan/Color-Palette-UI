@@ -3,6 +3,7 @@
 ### ### ### BUILT-IN LIBRARIES ### ###
 ### ### ### ### ### ## ### ### ### ###
 import logging
+from traceback import print_tb
 import cv2
 import numpy as np
 
@@ -115,7 +116,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             self.lcdNumber_Pointer_Color_Grayscale_Inverted
         ]
         self.graphicsView_Camera.is_Connected_LCDs = True
-        self.graphicsView_Camera.connector_mouseDoubleClickEvent = self.color_Picker_Double_Click_Action
+        self.graphicsView_Camera.connector_mouseDoubleClickEvent = self.action_color_Picker_Double_Click
 
         ### ### ### ### ###
         ### ### Init ### ##
@@ -148,7 +149,6 @@ class Ui_Color_Palette(Structure_Ui_Camera):
     ### ### ## ### ###
     
     def init(self):
-
         self.configure_Other_Settings()
         self.connect_to_Camera(
             CAMERA_FLAGS.CV2,
@@ -234,8 +234,8 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         self.pushButton_refresh_palettes.clicked.connect(
             lambda: self.load_Color_Palettes("./")
         )
-        self.pushButton_Double_Click_Listener.clicked.connect(
-            self.action_Double_Click_Listener
+        self.pushButton_Convert_Double_Clicked_RGB.clicked.connect(
+            self.action_Convert_Double_Clicked_RGB
         )
         
     def load_Video(self):
@@ -298,6 +298,9 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         self.checkBox_Process_Active.stateChanged.connect(
             self.action_checkbox_Process
         )
+        self.checkBox_Color_Picker_Live_Mask.stateChanged.connect(
+            self.action_Color_Picker_Live_Mask
+        )
         # self.action_About_Page.triggered.connect(
         #     self.about_Page(self)
         # )
@@ -325,6 +328,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             "Upper_Green": self.spinBox_Color_Palette_Upper_Green.value(),
             "Lower_Blue": self.spinBox_Color_Palette_Lower_Blue.value(),
             "Upper_Blue": self.spinBox_Color_Palette_Upper_Blue.value(),
+            "is_Invert": self.checkBox_is_Invert.isChecked(),
             "is_HSV": self.checkBox_is_HSV.isChecked(),
             "Color_Mask_Kernel": self.checkBox_Color_Mask_Kernel.isChecked(),
             "Color_Mask_Kernel_Min": self.spinBox_Color_Mask_Kernel_Min.value(),
@@ -353,44 +357,72 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                         self.listWidget_color_palettes.currentRow()
                     ].split("/")[-1]
                 )
+                
                 # Red
                 self.spinBox_Color_Palette_Lower_Red.setValue(
-                    self.loaded_color_palette["Lower_Red"]
+                    self.loaded_color_palette["Lower_Red"] if 
+                    "Lower_Red" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Lower_Red.value()
                 )
                 self.spinBox_Color_Palette_Upper_Red.setValue(
-                    self.loaded_color_palette["Upper_Red"]
+                    self.loaded_color_palette["Upper_Red"] if 
+                    "Upper_Red" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Upper_Red.value()
                 )
 
                 # Green
                 self.spinBox_Color_Palette_Lower_Green.setValue(
-                    self.loaded_color_palette["Lower_Green"]
+                    self.loaded_color_palette["Lower_Green"] if 
+                    "Lower_Green" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Lower_Green.value()
                 )
                 self.spinBox_Color_Palette_Upper_Green.setValue(
-                    self.loaded_color_palette["Upper_Green"]
+                    self.loaded_color_palette["Upper_Green"] if 
+                    "Upper_Green" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Upper_Green.value()
                 )
                 
                 # Blue
                 self.spinBox_Color_Palette_Lower_Blue.setValue(
-                    self.loaded_color_palette["Lower_Blue"]
+                    self.loaded_color_palette["Lower_Blue"] if 
+                    "Lower_Blue" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Lower_Blue.value()
                 )
                 self.spinBox_Color_Palette_Upper_Blue.setValue(
-                    self.loaded_color_palette["Upper_Blue"]
+                    self.loaded_color_palette["Upper_Blue"] if 
+                    "Upper_Blue" in self.loaded_color_palette else
+                    self.spinBox_Color_Palette_Upper_Blue.value()
+                )
+                
+                # Invert
+                self.checkBox_is_Invert.setChecked(
+                    self.loaded_color_palette["is_Invert"] if 
+                    "is_Invert" in self.loaded_color_palette else
+                    self.checkBox_is_Invert.isChecked()
                 )
                 
                 # HSV
                 self.checkBox_is_HSV.setChecked(
-                    self.loaded_color_palette["is_HSV"]
+                    self.loaded_color_palette["is_HSV"] if
+                    "is_HSV" in self.loaded_color_palette else
+                    self.checkBox_is_HSV.isChecked()
                 )
                 
                 # Kernel
                 self.checkBox_Color_Mask_Kernel.setChecked(
-                    self.loaded_color_palette["Color_Mask_Kernel"]
+                    self.loaded_color_palette["Color_Mask_Kernel"] if
+                    "Color_Mask_Kernel" in self.loaded_color_palette else
+                    self.checkBox_Color_Mask_Kernel.isChecked()
                 )
                 self.spinBox_Color_Mask_Kernel_Min.setValue(
-                    self.loaded_color_palette["Color_Mask_Kernel_Min"]
+                    self.loaded_color_palette["Color_Mask_Kernel_Min"] if
+                    "Color_Mask_Kernel_Min" in self.loaded_color_palette else
+                    self.spinBox_Color_Mask_Kernel_Min.value()
                 )
                 self.spinBox_Color_Mask_Kernel_Max.setValue(
-                    self.loaded_color_palette["Color_Mask_Kernel_Max"]
+                    self.loaded_color_palette["Color_Mask_Kernel_Max"] if
+                    "Color_Mask_Kernel_Max" in self.loaded_color_palette else
+                    self.spinBox_Color_Mask_Kernel_Max.value()
                 )
     
     def load_Color_Palettes(self, path):
@@ -412,27 +444,39 @@ class Ui_Color_Palette(Structure_Ui_Camera):
     ### ### ## ### ###
     ### ### ## ### ###
     
-    def action_Double_Click_Listener(self):
-        self.QTimer_Dict["action_Double_Click_Listener"] = qtimer_Create_And_Run(
-            self,
-            self.color_Picker_Double_Click_Listener,
-            100,
-            is_single_shot=True
-        )
-    
-    def color_Picker_Double_Click_Listener(self):
-        self.graphicsView_Camera.mouse_Events["mouseDoubleClick"] = False
-        while not self.graphicsView_Camera.mouse_Events["mouseDoubleClick"]:
-            self.qt_Priority()
-        # self.graphicsView_Camera.mouse_Events["mouseDoubleClick_position_scene"]
-        # (self.red, self.green, self.blue)
+    def action_Convert_Double_Clicked_RGB(self):
+        red = self.spinBox_Color_Palette_Double_Click_Red.value()
+        green = self.spinBox_Color_Palette_Double_Click_Green.value()
+        blue = self.spinBox_Color_Palette_Double_Click_Blue.value()
+        margin = self.spinBox_Color_Palette_Double_Click_Margin.value()
 
-        red, green, blue = self.graphicsView_Camera.color_Picker()
-        self.spinBox_Color_Palette_Double_Click_Red.setValue(red)
-        self.spinBox_Color_Palette_Double_Click_Green.setValue(green)
-        self.spinBox_Color_Palette_Double_Click_Blue.setValue(blue)
+        self.spinBox_Color_Palette_Lower_Red.setValue(red - margin if red - margin > 0 else 0)
+        self.spinBox_Color_Palette_Lower_Green.setValue(green - margin if green - margin > 0 else 0)
+        self.spinBox_Color_Palette_Lower_Blue.setValue(blue - margin if blue - margin > 0 else 0)
+        
+        self.spinBox_Color_Palette_Upper_Red.setValue(red + margin if red + margin < 255 else 255)
+        self.spinBox_Color_Palette_Upper_Green.setValue(green + margin if green + margin < 255 else 255)
+        self.spinBox_Color_Palette_Upper_Blue.setValue(blue + margin if blue + margin < 255 else 255)
     
-    def color_Picker_Double_Click_Action(self, params):
+    def action_Color_Picker_Live_Mask(self):
+        if self.checkBox_Color_Picker_Live_Mask.isChecked():
+            self.graphicsView_Camera.connector_mouseMoveEvent = self.action_Color_Picker_MouseMove_Event
+        else:
+            self.graphicsView_Camera.connector_mouseMoveEvent = lambda: None
+        
+    def action_Color_Picker_MouseMove_Event(self):
+        red, green, blue = self.graphicsView_Camera.color_Picker()
+        margin = self.spinBox_Color_Palette_Double_Click_Margin.value()
+
+        self.spinBox_Color_Palette_Lower_Red.setValue(red - margin if red - margin > 0 else 0)
+        self.spinBox_Color_Palette_Lower_Green.setValue(green - margin if green - margin > 0 else 0)
+        self.spinBox_Color_Palette_Lower_Blue.setValue(blue - margin if blue - margin > 0 else 0)
+        
+        self.spinBox_Color_Palette_Upper_Red.setValue(red + margin if red + margin < 255 else 255)
+        self.spinBox_Color_Palette_Upper_Green.setValue(green + margin if green + margin < 255 else 255)
+        self.spinBox_Color_Palette_Upper_Blue.setValue(blue + margin if blue + margin < 255 else 255)
+    
+    def action_color_Picker_Double_Click(self, params):
         red, green, blue = params
         self.spinBox_Color_Palette_Double_Click_Red.setValue(red)
         self.spinBox_Color_Palette_Double_Click_Green.setValue(green)
@@ -492,12 +536,8 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                     ),
                     is_HSV=self.checkBox_is_HSV.isChecked(),
                 )
-                # is_color_Range_Mask, max_matched_frame_coords, mask = color_Range_Mask(
-                #     img=image,
-                #     color_palette=self.color_palette,
-                #     type_color=self.comboBox_Color_Mask_Type.currentText(),
-                #     ranged_color=self.comboBox_Color_Mask_Range.currentText().lower()
-                # )
+                mask = 255 - mask if self.checkBox_is_Invert.isChecked() else mask
+                
                 if is_color_Range_Mask:
                     if self.checkBox_Color_Mask_Kernel.isChecked():
                         if self.comboBox_Color_Mask_Kernel.currentText().lower() == "custom":
@@ -521,6 +561,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                     masked_image[mask != 255] = 0
                     self.buffer_graphicsView_Camera_Process_Color_Mask = masked_image
                     image = masked_image
+                image = 255 - image if self.checkBox_is_Invert.isChecked() else image
         return image
 
         
