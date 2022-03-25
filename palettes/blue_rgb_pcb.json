@@ -1,0 +1,13 @@
+{
+    "Color_Mask_Kernel": true,
+    "Color_Mask_Kernel_Max": 2,
+    "Color_Mask_Kernel_Min": 2,
+    "Lower_Blue": 30,
+    "Lower_Green": 25,
+    "Lower_Red": 0,
+    "Upper_Blue": 160,
+    "Upper_Green": 150,
+    "Upper_Red": 60,
+    "is_HSV": false,
+    "is_Invert": false
+}

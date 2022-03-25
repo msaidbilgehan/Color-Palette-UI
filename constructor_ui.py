@@ -23,6 +23,8 @@ from structure_ui_camera import Structure_Ui_Camera
 from structure_threading import Thread_Object
 
 
+PALETTES_PATH = "./palettes/"
+
 ### ### ### ### ### ## ## ## ### ### ### ### ###
 ### ### ### CAMERA UI CONFIGURATIONS ### ### ###
 ### ### ### ### ### ## ## ## ### ### ### ### ###
@@ -34,7 +36,7 @@ class Graphics_View_LCD(Graphics_View):
         self.is_Connected_LCDs = False
         self.lcdNumber_XY_list = list()
         self.lcdNumber_RGB_list = list()
-        
+        self.initialize_focus_to_image(zoom_x_times = 5, width = 25, height = 25)
         # self.red = 0
         # self.green = 0 
         # self.blue = 0
@@ -142,7 +144,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             "Color_Mask_Kernel_Max": self.spinBox_Color_Mask_Kernel_Max.value()
         }
         self.color_palette_file_paths = list()
-        self.load_Color_Palettes("./")
+        self.load_Color_Palettes(PALETTES_PATH)
         
     ### ### ## ### ###
     ### OVERWRITES ###
@@ -232,7 +234,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             self.load_Palette
         )
         self.pushButton_refresh_palettes.clicked.connect(
-            lambda: self.load_Color_Palettes("./")
+            lambda: self.load_Color_Palettes(PALETTES_PATH)
         )
         self.pushButton_Convert_Double_Clicked_RGB.clicked.connect(
             self.action_Convert_Double_Clicked_RGB
@@ -320,7 +322,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
 
     def save_Palette(self):
         path = self.lineEdit_color_palette_name.text() if \
-            self.lineEdit_color_palette_name.text() else "default_color_palette.json"
+            self.lineEdit_color_palette_name.text() else "palettes/default_color_palette.json"
         self.loaded_color_palette = {
             "Lower_Red": self.spinBox_Color_Palette_Lower_Red.value(),
             "Upper_Red": self.spinBox_Color_Palette_Upper_Red.value(),
@@ -338,7 +340,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             path,
             self.loaded_color_palette
         )
-        self.load_Color_Palettes("./")
+        self.load_Color_Palettes(PALETTES_PATH)
         
     def load_Palette(self):
         # path = self.lineEdit_color_palette_name.text() if \
