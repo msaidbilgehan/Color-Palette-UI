@@ -40,48 +40,17 @@
              <string>Other Settings</string>
             </property>
             <layout class="QGridLayout" name="gridLayout">
-             <item row="2" column="0" colspan="4">
-              <widget class="Line" name="line">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="QSpinBox" name="spinBox_Color_Mask_Kernel_Min">
+             <item row="6" column="2">
+              <widget class="QSpinBox" name="spinBox_Color_Mask_Erosion">
                <property name="maximum">
                 <number>255</number>
                </property>
                <property name="value">
-                <number>25</number>
+                <number>1</number>
                </property>
               </widget>
              </item>
-             <item row="3" column="2" colspan="2">
-              <widget class="QComboBox" name="comboBox_Color_Mask_Kernel">
-               <item>
-                <property name="text">
-                 <string>Custom</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="5" column="0" colspan="4">
-              <widget class="Line" name="line_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="4">
-              <widget class="QCheckBox" name="checkBox_is_HSV">
-               <property name="text">
-                <string>Is HSV Color Type
-(Default: False/BGR)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="3">
+             <item row="4" column="2">
               <widget class="QSpinBox" name="spinBox_Color_Mask_Kernel_Max">
                <property name="maximum">
                 <number>255</number>
@@ -91,17 +60,88 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0" rowspan="2" colspan="2">
-              <widget class="QCheckBox" name="checkBox_Color_Mask_Kernel">
-               <property name="text">
-                <string>Kernel</string>
+             <item row="9" column="0" colspan="3">
+              <widget class="Line" name="line_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
-             <item row="0" column="0" colspan="4">
+             <item row="2" column="0" colspan="3">
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QCheckBox" name="checkBox_is_HSV">
+               <property name="text">
+                <string>Is HSV Color Type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QSpinBox" name="spinBox_Color_Mask_Kernel_Min">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>25</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <widget class="QComboBox" name="comboBox_Color_Mask_Kernel">
+               <item>
+                <property name="text">
+                 <string>Custom</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="3">
+              <widget class="QCheckBox" name="checkBox_is_Crop_Bigger_Detection">
+               <property name="text">
+                <string>Crop to Bigger Detection</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
               <widget class="QCheckBox" name="checkBox_is_Invert">
                <property name="text">
                 <string>Invert</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="2">
+              <widget class="QSpinBox" name="spinBox_Color_Mask_Dilation">
+               <property name="maximum">
+                <number>255</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0" colspan="2">
+              <widget class="QLabel" name="label_Color_Mask_Dilation">
+               <property name="text">
+                <string>Dilation Run Time</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="2">
+              <widget class="QLabel" name="label_Color_Mask_Erosion">
+               <property name="text">
+                <string>Erosion Run Time</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" rowspan="2">
+              <widget class="QCheckBox" name="checkBox_Color_Mask_Kernel">
+               <property name="text">
+                <string>Kernel</string>
                </property>
               </widget>
              </item>

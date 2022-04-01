@@ -15,7 +15,7 @@ import libs
 from stdo import stdo
 from qt_tools import qtimer_Create_And_Run, list_Widget_Item, lcdNumber_Set, get_Color
 from tools import load_from_json, save_to_json, list_files
-from image_manipulation import color_Range_Mask_2, erosion, dilation
+from image_manipulation import color_Range_Mask, erosion, dilation
 
 from structure_ui import init_and_run_UI, Graphics_View  # , Structure_UI, init_UI
 from structure_camera import CAMERA_FLAGS
@@ -524,7 +524,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             image = self.stream_Flow()
             
             if image is not None:
-                is_color_Range_Mask, max_matched_frame_coords, mask = color_Range_Mask_2(
+                mask, max_matched_frame_coords = color_Range_Mask(
                     img=image,
                     color_palette_lower=(
                         self.spinBox_Color_Palette_Lower_Blue.value(),
@@ -537,33 +537,34 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                         self.spinBox_Color_Palette_Upper_Red.value()
                     ),
                     is_HSV=self.checkBox_is_HSV.isChecked(),
+                    get_Max=self.checkBox_is_Crop_Bigger_Detection.isChecked()
                 )
                 mask = 255 - mask if self.checkBox_is_Invert.isChecked() else mask
                 
-                if is_color_Range_Mask:
-                    if self.checkBox_Color_Mask_Kernel.isChecked():
-                        if self.comboBox_Color_Mask_Kernel.currentText().lower() == "custom":
-                            kernel = np.ones((
-                                self.spinBox_Color_Mask_Kernel_Min.value(),
-                                self.spinBox_Color_Mask_Kernel_Max.value()
-                            ), np.uint8)
-                        else:
-                            kernel = np.ones(
-                                self.kernels[self.comboBox_Color_Mask_Kernel.currentText()], 
-                                np.uint8
-                            )
+                if self.checkBox_Color_Mask_Kernel.isChecked():
+                    kernel = np.ones((
+                        self.spinBox_Color_Mask_Kernel_Min.value(),
+                        self.spinBox_Color_Mask_Kernel_Max.value()
+                    ), np.uint8)
+                    self.qt_Priority()
+                    for i in range(self.spinBox_Color_Mask_Erosion.value()):
                         self.qt_Priority()
                         mask = erosion(mask, kernel)
+                    for i in range(self.spinBox_Color_Mask_Dilation.value()):
+                        self.qt_Priority()
                         mask = dilation(mask, kernel)
-                    # image = image[
-                    #     max_matched_frame_coords[1]: max_matched_frame_coords[1] + max_matched_frame_coords[3],
-                    #     max_matched_frame_coords[0]: max_matched_frame_coords[0] + max_matched_frame_coords[2],
-                    # ]
-                    masked_image = image.copy() 
-                    masked_image[mask != 255] = 0
-                    self.buffer_graphicsView_Camera_Process_Color_Mask = masked_image
-                    image = masked_image
-                image = 255 - image if self.checkBox_is_Invert.isChecked() else image
+                        
+                masked_image = image.copy() 
+                masked_image[mask != 255] = (0, 0, 0)
+                
+                if self.checkBox_is_Crop_Bigger_Detection.isChecked() and max_matched_frame_coords.any():
+                    masked_image = masked_image[
+                        max_matched_frame_coords[1]: max_matched_frame_coords[1] + max_matched_frame_coords[3],
+                        max_matched_frame_coords[0]: max_matched_frame_coords[0] + max_matched_frame_coords[2],
+                    ]
+                self.buffer_graphicsView_Camera_Process_Color_Mask = masked_image
+                image = masked_image
+            image = 255 - image if self.checkBox_is_Invert.isChecked() else image
         return image
 
         
