@@ -844,31 +844,38 @@ background-color: red;</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_7">
              <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_save_palette">
-               <property name="text">
-                <string>Save Palette</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLineEdit" name="lineEdit_color_palette_name"/>
-             </item>
-             <item row="4" column="0">
               <widget class="QPushButton" name="pushButton_load_palette">
                <property name="text">
                 <string>Load Palette</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1" rowspan="4">
-              <widget class="QListWidget" name="listWidget_color_palettes"/>
-             </item>
              <item row="2" column="0">
+              <widget class="QPushButton" name="pushButton_save_palette">
+               <property name="text">
+                <string>Save Palette</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLineEdit" name="lineEdit_color_palette_name"/>
+             </item>
+             <item row="1" column="0">
               <widget class="QPushButton" name="pushButton_refresh_palettes">
                <property name="text">
                 <string>Refresh</string>
                </property>
               </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pushButton_Save_Image_Color_Mask">
+               <property name="text">
+                <string>Save Image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="5">
+              <widget class="QListWidget" name="listWidget_color_palettes"/>
              </item>
             </layout>
            </widget>

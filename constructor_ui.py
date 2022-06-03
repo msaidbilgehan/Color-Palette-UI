@@ -201,6 +201,15 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                 ),
             ]
         )
+        self.pushButton_Save_Image_Color_Mask.clicked.connect(
+            lambda: self.save_Image_Action(
+                # self.camera_Instance.stream_Returner(auto_pop=False),
+                img=self.buffer_graphicsView_Camera_Process_Color_Mask,
+                path=None,
+                filename=[],
+                format="png"
+            )
+        )
         self.pushButton_Save_Image.clicked.connect(
             lambda: self.save_Image_Action(
                 # self.camera_Instance.stream_Returner(auto_pop=False),
