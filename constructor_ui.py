@@ -86,7 +86,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         super(Ui_Color_Palette, self).__init__(*args, **kwargs)
 
         ### ### ### ### ###
-        ### Constractor ###
+        ### Constructor ###
         ### ### ### ### ###
         self.logger_level = logger_level
         self.__thread_Dict = dict()
@@ -289,10 +289,10 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             #     connector_stream=lambda: self.buffer_graphicsView_Camera_Process_Color_Mask,
             #     delay=1
             # )
-            is_successfull = True
-            while is_successfull:
-                is_successfull, video_frame = video_object.read()
-                if is_successfull:
+            is_successful = True
+            while is_successful:
+                is_successful, video_frame = video_object.read()
+                if is_successful:
                     self.camera_Buffer = video_frame
             video_object.release()
 
@@ -334,12 +334,21 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             "is_HSV": self.checkBox_is_HSV.isChecked(),
             "Color_Mask_Kernel": self.checkBox_Color_Mask_Kernel.isChecked(),
             "Color_Mask_Kernel_Min": self.spinBox_Color_Mask_Kernel_Min.value(),
-            "Color_Mask_Kernel_Max": self.spinBox_Color_Mask_Kernel_Max.value()
+            "Color_Mask_Kernel_Max": self.spinBox_Color_Mask_Kernel_Max.value(),
+            "Erosion": self.spinBox_Color_Mask_Erosion.value(),
+            "Dilation": self.spinBox_Color_Mask_Dilation.value()
         }
+        
+        if len(path) > 5:
+            if ".json" != path[-5:]:
+                path = path + ".json"
+        else:
+            path = path + ".json"
         save_to_json(
-            path,
+            PALETTES_PATH + path,
             self.loaded_color_palette
         )
+
         self.load_Color_Palettes(PALETTES_PATH)
         
     def load_Palette(self):
@@ -426,6 +435,21 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                     "Color_Mask_Kernel_Max" in self.loaded_color_palette else
                     self.spinBox_Color_Mask_Kernel_Max.value()
                 )
+                
+                # Erosion
+                self.spinBox_Color_Mask_Erosion.setValue(
+                    self.loaded_color_palette["Erosion"] if
+                    "Erosion" in self.loaded_color_palette else
+                    self.spinBox_Color_Mask_Erosion.value()
+                )
+                
+                # Dilation
+                self.spinBox_Color_Mask_Dilation.setValue(
+                    self.loaded_color_palette["Dilation"] if
+                    "Dilation" in self.loaded_color_palette else
+                    self.spinBox_Color_Mask_Dilation.value()
+                )
+                
     
     def load_Color_Palettes(self, path):
         self.color_palette_file_paths = list_files(
@@ -486,7 +510,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
     
     def stream_Flow(self):
         return self.camera_Instance.stream_Returner() \
-            if self.camera_Instance is not None else None
+            if self.camera_Instance is not None else self.api_Get_Buffered_Image(index=-1)
 
     '''
     This code is a thread that runs the deep face process The code will run in a loop 
@@ -499,7 +523,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
             name="Constructor.process_Thread",
             delay=0.1,
             # logger_level=None,
-            set_Deamon=True,
+            set_Daemon=True,
             run_number=None,
             quit_trigger=trigger_quit
         )
@@ -564,7 +588,7 @@ class Ui_Color_Palette(Structure_Ui_Camera):
                     ]
                 self.buffer_graphicsView_Camera_Process_Color_Mask = masked_image
                 image = masked_image
-            image = 255 - image if self.checkBox_is_Invert.isChecked() else image
+                image = 255 - image if self.checkBox_is_Invert.isChecked() else image
         return image
 
         
