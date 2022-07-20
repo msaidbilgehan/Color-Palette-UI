@@ -146,6 +146,10 @@ class Ui_Color_Palette(Structure_Ui_Camera):
         self.color_palette_file_paths = list()
         self.load_Color_Palettes(PALETTES_PATH)
         
+        self.configure_Button_Connections()
+        self.configure_Other_Settings()
+        self.init_QTimers()
+        
     ### ### ## ### ###
     ### OVERWRITES ###
     ### ### ## ### ###
